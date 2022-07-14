@@ -11,10 +11,12 @@ class countButton extends StatelessWidget {
       ),
       body: Center(
         child: ElevatedButton(
-          onPressed: () {
+          onPressed: () async {
             print('시작!');
             // exam1();
-            exam2().then((value) => print(value));
+            // exam2().then((value) => print(value));
+            String result = await exam2();
+            print(result);
           },
           child: Text('연습1'),
         ),
