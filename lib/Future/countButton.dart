@@ -10,15 +10,29 @@ class countButton extends StatelessWidget {
         title: const Text('Button 을 이용한 Future 연습'),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            print('시작!');
-            // exam1();
-            // exam2().then((value) => print(value));
-            String result = await exam2();
-            print(result);
-          },
-          child: Text('연습1'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                print('시작!');
+                // exam1();
+                // exam2().then((value) => print(value));
+                String result = await exam2();
+                print(result);
+              },
+              child: Text('연습1'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                for (int i = 0; i < 5; i++){
+                  await Future.delayed(const Duration(seconds: 1));
+                  print("1 second elapsed, hi!");
+                }
+              },
+              child: Text('두번째 버튼 예제'),
+            ),
+          ],
         ),
       ),
     );
