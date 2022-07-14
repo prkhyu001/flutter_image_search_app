@@ -25,4 +25,30 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// 단축키 : stful
+// StatefulWidget : 변수가 있는, 변수 때문에 화면이 바뀔 수 있을 때 사용
+
+class FutureExam4 extends StatefulWidget {
+  const FutureExam4({Key? key}) : super(key: key);
+
+  @override
+  State<FutureExam4> createState() => _FutureExam4State();
+}
+
+class _FutureExam4State extends State<FutureExam4> {
+  int countDown = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Future exam 4"),
+      ),
+      body: Center(
+        child: Text('$countDown', style: TextStyle(fontSize: 40),),
+      ),
+    );
+  }
+}
+
 
