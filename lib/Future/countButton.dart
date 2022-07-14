@@ -21,7 +21,7 @@ class countButton extends StatelessWidget {
                 String result = await exam2();
                 print(result);
               },
-              child: Text('연습1'),
+              child: const Text('연습1'),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -30,7 +30,13 @@ class countButton extends StatelessWidget {
                   print("1 second elapsed, hi!");
                 }
               },
-              child: Text('두번째 버튼 예제'),
+              child: const Text('두번째 버튼 예제'),
+            ),
+            ElevatedButton(
+              onPressed: () { // 입출력 값이 없기에 onPressed() 괄호 안을 비워도 된다.
+                exam3();
+              },
+              child: const Text('세번째 버튼 예제'),
             ),
           ],
         ),
@@ -53,5 +59,15 @@ class countButton extends StatelessWidget {
     // // (coding style used less frequently nowadays)
     // var sentence = await Future.value("3 seconds passed, Hello!");
     // return sentence;
+  }
+
+  Future exam3() async {
+    print("다운로드 시작!");
+    await Future.delayed(const Duration(seconds: 1));
+    print("초기화 중...");
+    await Future.delayed(const Duration(seconds: 1));
+    print("핵심파일 로드 중...");
+    await Future.delayed(const Duration(seconds: 1));
+    print("다운로드 완료!");
   }
 }
