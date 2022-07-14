@@ -33,9 +33,7 @@ class countButton extends StatelessWidget {
               child: const Text('두번째 버튼 예제'),
             ),
             ElevatedButton(
-              onPressed: () { // 입출력 값이 없기에 onPressed() 괄호 안을 비워도 된다.
-                exam3();
-              },
+              onPressed: exam3, // 입출력 값이 없기에 onPressed() 괄호 안을 비워도 된다.
               child: const Text('세번째 버튼 예제'),
             ),
           ],
