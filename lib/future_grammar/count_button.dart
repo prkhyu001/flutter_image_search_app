@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class countButton extends StatelessWidget {
-  const countButton({Key? key}) : super(key: key);
+class CountButton extends StatelessWidget {
+  const CountButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Button 을 이용한 Future 연습'),
+        title: const Text('Button 을 이용한 future_grammar 연습'),
       ),
       body: Center(
         child: Column(
@@ -55,7 +55,7 @@ class countButton extends StatelessWidget {
     await Future.delayed(const Duration(seconds: 3));
     return "3 seconds passed, Hello!";
     // // (coding style used less frequently nowadays)
-    // var sentence = await Future.value("3 seconds passed, Hello!");
+    // var sentence = await future_grammar.value("3 seconds passed, Hello!");
     // return sentence;
   }
 
