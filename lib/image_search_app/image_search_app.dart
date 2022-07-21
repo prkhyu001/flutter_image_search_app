@@ -2,9 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:newtest/image_search_app/model_data/json_data.dart';
-import 'model_data/json_data.dart' as my_data;
-
 import 'package:newtest/image_search_app/model_data/json_file.dart';
+// import 'model_data/json_data.dart' as my_data;
 
 class ImageSearchApp extends StatefulWidget {
   const ImageSearchApp({Key? key}) : super(key: key);
@@ -14,8 +13,9 @@ class ImageSearchApp extends StatefulWidget {
 }
 
 class _ImageSearchAppState extends State<ImageSearchApp> {
+  final TextEditingController _textController = TextEditingController();
   // ? == nullable , null 을 허용하는 타입
-  List<my_data.JsonData> jsonUrls = [];
+  List<JsonData> urls = [];
 
   @override
   void initState() {
@@ -24,7 +24,7 @@ class _ImageSearchAppState extends State<ImageSearchApp> {
   }
 
   Future initData() async {
-    jsonUrls = await getJsonFile();
+    urls = await getJsonFile();
     setState(() {}); // 화면 갱신 refresh page
   }
 
@@ -32,29 +32,55 @@ class _ImageSearchAppState extends State<ImageSearchApp> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Image Search'),
-        ),
-        body: Center(
-          // child: user == null
-          //   ? const CircularProgressIndicator() // null 일때 리턴
-          //   : Text(
-          //   user.toString(), // null 이 아니면 리턴할 내용 // '이름 ${person!['name']}',
-          //   style: TextStyle(fontSize: 30),),
-          child: Expanded(
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-              itemCount: jsonUrls.length,
-              // ListView.builder(
-              itemBuilder: (BuildContext context, int index) {
-                JsonData images = jsonUrls[index];
-                return Image.network(images.previewURL);
-              },
-            ),
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          title: const Text(
+            'Image Search App',
+            style: TextStyle(color: Colors.black),
           ),
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: TextField(
+                controller: _textController,
+                onSubmitted: _handleSubmitted,
+                decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(color: Colors.black12, width: 2),
+                    ),
+                    suffixIcon: Icon(Icons.search),
+                    hintText: "검색어를 입력하세요",
+                    hintStyle:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              ),
+            ),
+            urls.isEmpty
+                ? const CircularProgressIndicator()
+                : Expanded(
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 1 / 1.5,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemCount: urls.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        JsonData images = urls[index];
+                        return ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.network(
+                              images.previewURL,
+                              fit: BoxFit.cover,
+                            ));
+                      },
+                    ),
+                  ),
+          ],
         ));
   }
 
@@ -71,6 +97,8 @@ class _ImageSearchAppState extends State<ImageSearchApp> {
     // }
     return results;
   }
+
+  void _handleSubmitted(String text) {
+    _textController.clear();
+  }
 }
-
-
