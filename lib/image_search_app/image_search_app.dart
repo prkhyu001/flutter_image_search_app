@@ -26,7 +26,7 @@ class ImageSearchApp extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.all(8.0),
               child: TextField(
                 // controller: _textController,
@@ -59,9 +59,12 @@ class ImageSearchApp extends StatelessWidget {
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 }
 
+                // null check 의 용도로 사용 가능. 데이터가 0개도, 데이터가 있는 것이다.
                 if (!snapshot.hasData) {
                   return const Center(
                     child: Text("데이터가 없습니다."),
@@ -70,6 +73,12 @@ class ImageSearchApp extends StatelessWidget {
 
                 final images =
                     snapshot.data!; // 위에서 데이터가 있음을 확인했으니, non-nullable 변수임을 보증
+
+                if (images.isEmpty) {
+                  return const Center(
+                    child: Text("데이터가 0개 입니다."),
+                  );
+                }
 
                 return Expanded(
                   child: GridView(
@@ -104,6 +113,9 @@ class ImageSearchApp extends StatelessWidget {
     Iterable hits = json['hits'];
     List<JsonData> results = hits.map((e) => JsonData.fromJson(e)).toList();
     return results;
+
+    // throw Exception('강제로 에러 발생 테스트'); // 강제로 에러를 발생시킬시에 return 문 대신 사용
+    // return []; // data 가 없는 상황을 확인할 때 사용
   }
 
 // void _handleSubmitted(String text) {
