@@ -5,28 +5,13 @@ import 'package:newtest/image_search_app/model_data/json_data.dart';
 import 'package:newtest/image_search_app/model_data/json_file.dart';
 // import 'model_data/json_data.dart' as my_data;
 
-class ImageSearchApp extends StatefulWidget {
+class ImageSearchApp extends StatelessWidget {
   const ImageSearchApp({Key? key}) : super(key: key);
 
-  @override
-  State<ImageSearchApp> createState() => _ImageSearchAppState();
-}
+  // final TextEditingController _textController = TextEditingController();
 
-class _ImageSearchAppState extends State<ImageSearchApp> {
-  final TextEditingController _textController = TextEditingController();
-  // ? == nullable , null 을 허용하는 타입
-  List<JsonData> urls = [];
-
-  @override
-  void initState() {
-    super.initState();
-    initData();
-  }
-
-  Future initData() async {
-    urls = await getJsonFile();
-    setState(() {}); // 화면 갱신 refresh page
-  }
+  // 상태가 없어서 StatelessWidget 으로 변경
+  // FutureBuilder 를 만들면서 불필요한 부분 지움
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +29,8 @@ class _ImageSearchAppState extends State<ImageSearchApp> {
             Padding(
               padding: EdgeInsets.all(8.0),
               child: TextField(
-                controller: _textController,
-                onSubmitted: _handleSubmitted,
+                // controller: _textController,
+                // onSubmitted: _handleSubmitted,
                 decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -57,35 +42,57 @@ class _ImageSearchAppState extends State<ImageSearchApp> {
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
-            urls.isEmpty
-                ? const CircularProgressIndicator()
-                : Expanded(
-              // 성능의 유리함을 위해 GridView.builder 를 사용했으나,
-              // 데이터가 적을때는 builder 를 쓰지 않아도 되어서
-              // GridView(children) map().toList() 패턴으로 수정함.
 
-              // 데이터를 위젯으로 변환한 케이스 :
-              // 데이터 -> map() 을 사용해서 text 로 변환 -> list 로 변환 -> GridView/ListView
+            // FutureBuilder :
+            // API 콜을 해서 응답을 받기 전까지는 로딩 위젯를 보여주고,
+            // 성공 응답을 받으면 데이터를 보여주는 위젯을 보여주고,
+            // 실패 응답을 받으면 에러메세지를 보여주는 위젯을 보여주고 싶을때 쓰는 위젯입니다.
 
-                    child: GridView(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        childAspectRatio: 1 / 1.5,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                      ),
-                      children: urls.map((images) {
-                        return ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.network(
-                              images.previewURL,
-                              fit: BoxFit.cover,
-                            ),
-                        );
-                      }).toList(),
+            FutureBuilder<List<JsonData>>(
+              future: getJsonFile(),
+              builder: (context, snapshot) {
+                // snapshot : 상태 등의 future 에 대한 여러가지 정보를 가지는 객체
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text("에러가 발생했습니다."),
+                  );
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: Text("데이터가 없습니다."),
+                  );
+                }
+
+                final images =
+                    snapshot.data!; // 위에서 데이터가 있음을 확인했으니, non-nullable 변수임을 보증
+
+                return Expanded(
+                  child: GridView(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      childAspectRatio: 1 / 1.5,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
                     ),
+                    children: images.map((images) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.network(
+                          images.previewURL,
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    }).toList(),
                   ),
+                );
+              },
+            ),
           ],
         ));
   }
@@ -96,15 +103,10 @@ class _ImageSearchAppState extends State<ImageSearchApp> {
     Map<String, dynamic> json = jsonDecode(jsonString);
     Iterable hits = json['hits'];
     List<JsonData> results = hits.map((e) => JsonData.fromJson(e)).toList();
-    // for (int i = 0; i < hits.length; i ++){
-    //   Map<String, dynamic> item = hits[i];
-    //   JsonData picture = JsonData.fromJson(item);
-    //   results.add(picture);
-    // }
     return results;
   }
 
-  void _handleSubmitted(String text) {
-    _textController.clear();
-  }
+// void _handleSubmitted(String text) {
+//   _textController.clear();
+// }
 }
