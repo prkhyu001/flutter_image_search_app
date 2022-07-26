@@ -60,7 +60,14 @@ class _ImageSearchAppState extends State<ImageSearchApp> {
             urls.isEmpty
                 ? const CircularProgressIndicator()
                 : Expanded(
-                    child: GridView.builder(
+              // 성능의 유리함을 위해 GridView.builder 를 사용했으나,
+              // 데이터가 적을때는 builder 를 쓰지 않아도 되어서
+              // GridView(children) map().toList() 패턴으로 수정함.
+
+              // 데이터를 위젯으로 변환한 케이스 :
+              // 데이터 -> map() 을 사용해서 text 로 변환 -> list 로 변환 -> GridView/ListView
+
+                    child: GridView(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
@@ -68,16 +75,15 @@ class _ImageSearchAppState extends State<ImageSearchApp> {
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
                       ),
-                      itemCount: urls.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        JsonData images = urls[index];
+                      children: urls.map((images) {
                         return ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: Image.network(
                               images.previewURL,
                               fit: BoxFit.cover,
-                            ));
-                      },
+                            ),
+                        );
+                      }).toList(),
                     ),
                   ),
           ],
