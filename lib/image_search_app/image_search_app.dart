@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:newtest/image_search_app/model_data/json_data.dart';
@@ -67,7 +68,7 @@ class _ImageSearchAppState extends State<ImageSearchApp> {
                 // snapshot : 상태 등의 future 에 대한 여러가지 정보를 가지는 객체
                 if (snapshot.hasError) {
                   return const Center(
-                    child: Text("에러가 발생했습니다."),
+                    child: Text("에러가 발생했습니다."), // 화면에 에러 status code 가 아닌, 지정한 메세지를 보여줌
                   );
                 }
 
@@ -122,8 +123,16 @@ class _ImageSearchAppState extends State<ImageSearchApp> {
   }
 
   Future<List<JsonData>> getJsonFile() async {
-    await Future.delayed(const Duration(seconds: 2));
-    String jsonString = images;
+    // await Future.delayed(const Duration(seconds: 2)); // 데이터를 가져오기전에 2초 기다리도록 설계
+
+    // 링크 맨 뒤에 &pretty=true 부분은 불필요해서 삭제
+    Uri url = Uri.parse('https://pixabay.com/api/?key=28866788-11de021711810cc8df58d08a2&q=yellow+flowers&image_type=photo');
+
+    http.Response response = await http.get(url);
+    print('Response status: ${response.statusCode}');
+    String jsonString = response.body;
+
+    // String jsonString = images;
     Map<String, dynamic> json = jsonDecode(jsonString);
     Iterable hits = json['hits'];
     List<JsonData> results = hits.map((e) => JsonData.fromJson(e)).toList();
