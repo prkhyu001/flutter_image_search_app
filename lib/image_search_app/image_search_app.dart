@@ -63,7 +63,7 @@ class _ImageSearchAppState extends State<ImageSearchApp> {
             // 실패 응답을 받으면 에러메세지를 보여주는 위젯을 보여주고 싶을때 쓰는 위젯입니다.
 
             FutureBuilder<List<JsonData>>(
-              future: getJsonFile(),
+              future: getJsonFile(_query),
               builder: (context, snapshot) {
                 // snapshot : 상태 등의 future 에 대한 여러가지 정보를 가지는 객체
                 if (snapshot.hasError) {
@@ -122,11 +122,11 @@ class _ImageSearchAppState extends State<ImageSearchApp> {
         ));
   }
 
-  Future<List<JsonData>> getJsonFile() async {
+  Future<List<JsonData>> getJsonFile(String query) async {
     // await Future.delayed(const Duration(seconds: 2)); // 데이터를 가져오기전에 2초 기다리도록 설계
 
     // 링크 맨 뒤에 &pretty=true 부분은 불필요해서 삭제
-    Uri url = Uri.parse('https://pixabay.com/api/?key=28866788-11de021711810cc8df58d08a2&q=yellow+flowers&image_type=photo');
+    Uri url = Uri.parse('https://pixabay.com/api/?key=28866788-11de021711810cc8df58d08a2&q=$query&image_type=photo');
 
     http.Response response = await http.get(url);
     print('Response status: ${response.statusCode}');
