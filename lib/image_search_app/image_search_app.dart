@@ -90,7 +90,7 @@ class ImageSearchApp extends StatelessWidget {
                       mainAxisSpacing: 10,
                     ),
                     children: images
-                        .where((e) => e.tags.contains('fruit'))
+                        .where((e) => e.tags.contains('red') || e.tags.contains('watch'))
                         .map((JsonData images) {
                       return ClipRRect(
                         borderRadius: BorderRadius.circular(20),
