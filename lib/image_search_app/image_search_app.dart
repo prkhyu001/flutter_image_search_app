@@ -5,14 +5,18 @@ import 'package:newtest/image_search_app/model_data/json_data.dart';
 import 'package:newtest/image_search_app/model_data/json_file.dart';
 // import 'model_data/json_data.dart' as my_data;
 
-class ImageSearchApp extends StatelessWidget {
+class ImageSearchApp extends StatefulWidget {
   const ImageSearchApp({Key? key}) : super(key: key);
 
-  // final TextEditingController _textController = TextEditingController();
+  @override
+  State<ImageSearchApp> createState() => _ImageSearchAppState();
+}
 
-  // 상태가 없어서 StatelessWidget 으로 변경
-  // FutureBuilder 를 만들면서 불필요한 부분 지움
+class _ImageSearchAppState extends State<ImageSearchApp> {
+  final TextEditingController _textController = TextEditingController();
+  String _query = '';
 
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,20 +30,29 @@ class ImageSearchApp extends StatelessWidget {
         ),
         body: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: TextField(
-                // controller: _textController,
+                controller: _textController,
                 // onSubmitted: _handleSubmitted,
+                // onChanged: (text){}, 사용시에는 검색 클릭 전에 입력에 따라 계속해서 화면을 변경, 검색
                 decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
+                    enabledBorder: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       borderSide: BorderSide(color: Colors.black12, width: 2),
                     ),
-                    suffixIcon: Icon(Icons.search),
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        // print("검색 ${_textController.text}"); // 클릭이 잘 되는지 run 하고 console에서 확인
+                        setState(() {
+                          _query = _textController.text;
+                        });
+                      },
+                      child: const Icon(Icons.search),
+                    ),
                     hintText: "검색어를 입력하세요",
-                    hintStyle:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    hintStyle: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
 
@@ -89,9 +102,9 @@ class ImageSearchApp extends StatelessWidget {
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
                     ),
-                    children: images
-                        .where((e) => e.tags.contains('red') || e.tags.contains('watch'))
-                        .map((JsonData images) {
+                    children:
+                        images.where((e) => e.tags.contains(_query)) // && 도 가능!
+                            .map((JsonData images) {
                       return ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: Image.network(
@@ -119,8 +132,4 @@ class ImageSearchApp extends StatelessWidget {
     // throw Exception('강제로 에러 발생 테스트'); // 강제로 에러를 발생시킬시에 return 문 대신 사용
     // return []; // data 가 없는 상황을 확인할 때 사용
   }
-
-// void _handleSubmitted(String text) {
-//   _textController.clear();
-// }
 }
