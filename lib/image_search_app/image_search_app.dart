@@ -85,11 +85,13 @@ class ImageSearchApp extends StatelessWidget {
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
-                      childAspectRatio: 1 / 1.5,
+                      childAspectRatio: 1 / 1.3,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
                     ),
-                    children: images.map((images) {
+                    children: images
+                        .where((e) => e.tags.contains('fruit'))
+                        .map((JsonData images) {
                       return ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: Image.network(
