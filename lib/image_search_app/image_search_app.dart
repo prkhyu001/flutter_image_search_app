@@ -103,7 +103,7 @@ class _ImageSearchAppState extends State<ImageSearchApp> {
                       mainAxisSpacing: 10,
                     ),
                     children:
-                        images.where((e) => e.tags.contains(_query)) // && 도 가능!
+                        images.where((e) => e.tags.contains(_query))
                             .map((JsonData images) {
                       return ClipRRect(
                         borderRadius: BorderRadius.circular(20),
