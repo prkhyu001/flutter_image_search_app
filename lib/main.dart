@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:newtest/video_player_app/video_search_app.dart';
+import 'package:newtest/video_player_app/video_n_image_app.dart';
 
+// import 'package:newtest/video_player_app/video_search_app.dart';
 // import 'package:newtest/future_grammar//count_button.dart';
 // import 'package:newtest/JSON_practice/json_prac1.dart';
 // import 'image_search_app/image_search_app.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.white,
       ),
-      home: const VideoSearchApp(),  // JsonPrac(), countButton(), ImageSearchApp()
+      home: const VideoNImageApp(),  // JsonPrac(), countButton(), ImageSearchApp()
       );
   }
 }
