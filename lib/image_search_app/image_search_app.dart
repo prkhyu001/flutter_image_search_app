@@ -122,6 +122,8 @@ class _ImageSearchAppState extends State<ImageSearchApp> {
         ));
   }
 
+  // 아래는 외부의 요인 또는 변수/전역변수를 쓰지 않는, 함수이다.
+
   Future<List<JsonData>> getJsonFile(String query) async {
     // await Future.delayed(const Duration(seconds: 2)); // 데이터를 가져오기전에 2초 기다리도록 설계
 

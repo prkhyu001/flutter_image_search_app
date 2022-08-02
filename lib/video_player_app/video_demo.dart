@@ -6,6 +6,8 @@ import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:newtest/image_search_app/model_data/json_data.dart';
 
+// 코드의 흐름 *
+
 class VideoPlayerWidget extends StatelessWidget {
   final VideoPlayerController video_controller;
 
@@ -85,14 +87,14 @@ class BasicOverlayWeight extends StatelessWidget {
         );
 }
 
-class VideoSearchApp extends StatefulWidget {
-  const VideoSearchApp({Key? key}) : super(key: key);
+class VideoPlayApp extends StatefulWidget {
+  const VideoPlayApp({Key? key}) : super(key: key);
 
   @override
-  State<VideoSearchApp> createState() => _VideoSearchAppState();
+  State<VideoPlayApp> createState() => _VideoPlayAppState();
 }
 
-class _VideoSearchAppState extends State<VideoSearchApp> {
+class _VideoPlayAppState extends State<VideoPlayApp> {
   final asset = 'assets/20220720_아빠앤수빈.mp4';
   late VideoPlayerController video_controller; // late 대신 ?를 붙이면
   // 아래의 controller.play 부분에서 null 을 재생할 수 없다는 에러가 생긴다...
@@ -143,9 +145,7 @@ class _VideoSearchAppState extends State<VideoSearchApp> {
   }
 
   // 아래는 외부의 요인 또는 변수/전역변수를 쓰지 않는, 함수이다.
-
-  Future<List<JsonData>> getJsonFile(String query) async {
-    // await Future.delayed(const Duration(seconds: 2)); // 데이터를 가져오기전에 2초 기다리도록 설계
+  Future<List<VideoData>> getJsonFile(String query) async {
 
     // 링크 맨 뒤에 &pretty=true 부분은 불필요해서 삭제
     Uri url = Uri.parse(
@@ -155,11 +155,9 @@ class _VideoSearchAppState extends State<VideoSearchApp> {
     print('Response status: ${response.statusCode}');
     String jsonString = response.body;
 
-    // String jsonString = images;
     Map<String, dynamic> json = jsonDecode(jsonString);
-    Iterable hits = json['hits']['videos']['tiny'];
-    // Iterable videos = json['videos'];
-    List<JsonData> results = hits.map((e) => JsonData.fromJson(e)).toList();
+    Iterable hits = json['hits'];
+    List<VideoData> results = hits.map((e) => VideoData.fromJson(e)).toList();
     return results;
 
     // throw Exception('강제로 에러 발생 테스트'); // 강제로 에러를 발생시킬시에 return 문 대신 사용
